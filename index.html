@@ -256,13 +256,39 @@
         };
         let activeChartInstance = null;
 
-        // Roughly pre-populate fuel price placeholders to minimize manual typing
-        const fuelPriceMatrix = {
-            "Super 98": 2.95,
-            "Special 95": 2.84,
-            "E-Plus 91": 2.76,
-            "Diesel": 3.10
-        };
+      // 1. Replace the old block with this expanded, date-grouped matrix
+const fuelPriceMatrix = {
+    "2026": {
+        "07": { "Super 98": 2.82, "Special 95": 2.70, "E-Plus 91": 2.63, "Diesel": 2.92 }, // July 2026
+        "06": { "Super 98": 2.95, "Special 95": 2.84, "E-Plus 91": 2.76, "Diesel": 3.10 }, // June 2026
+        "05": { "Super 98": 3.34, "Special 95": 3.22, "E-Plus 91": 3.15, "Diesel": 3.07 }, // May 2026
+        "04": { "Super 98": 3.15, "Special 95": 3.03, "E-Plus 91": 2.96, "Diesel": 3.09 }  // April 2026
+    }
+};
+
+// 2. Replace the old updateDefaultPricePerLiter() function with this one
+function updateDefaultPricePerLiter() {
+    const dateVal = document.getElementById('inpDate').value; // e.g., "2026-07-05"
+    const grade = document.getElementById('inpGrade').value;
+    const priceInput = document.getElementById('inpPricePerLiter');
+
+    if (!dateVal) return;
+
+    // Split the date string to get the year and month
+    const parts = dateVal.split('-'); 
+    const year = parts[0];
+    const month = parts[1];
+
+    // Check if we have the prices for this specific month
+    if (fuelPriceMatrix[year] && fuelPriceMatrix[year][month] && fuelPriceMatrix[year][month][grade]) {
+        priceInput.value = fuelPriceMatrix[year][month][grade];
+    } else {
+        // Fallback placeholder if it's a brand new month you haven't added yet
+        priceInput.value = ''; 
+        priceInput.placeholder = "Enter price manually";
+    }
+}
+
 
         const i18n = {
             en: {
