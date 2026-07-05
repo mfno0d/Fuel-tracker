@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pitstop</title>
+    <!-- Stable charting library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <!-- PWA Settings -->
     <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Pitstop%20Fuel%20Tracker%22,%22short_name%22:%22Pitstop%22,%22start_url%22:%22/Fuel-tracker/%22,%22display%22:%22standalone%22,%22background_color%22:%22%23000000%22,%22theme_color%22:%22%23000000%22,%22icons%22:[{%22src%22:%22https://img.icons8.com/fluency/512/gas-station.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,7 +15,7 @@
     
     <style>
         :root {
-            --bg-main: #000001;
+            --bg-main: #000000;
             --bg-card: #0a0a0a;
             --border-color: #1a1a1a;
             --text-main: #ffffff;
@@ -41,8 +43,8 @@
         
         [dir="rtl"] { font-family: system-ui, -apple-system, sans-serif; }
 
-        header { background: var(--bg-main); border-b: 1px solid var(--border-color); padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        h1 { font-size: 20px; font-weight: 700; tracking: -0.5px; }
+        header { background: var(--bg-main); border-bottom: 1px solid var(--border-color); padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
         
         .header-controls { display: flex; align-items: center; gap: 8px; }
         select { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: 500; outline: none; }
@@ -105,10 +107,12 @@
         [dir="rtl"] .garage-item { flex-direction: row-reverse; }
 
         .system-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .btn-tool { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 500; }
     </style>
 </head>
 <body>
 
+    <!-- Header System -->
     <header>
         <h1 data-i18n="appTitle">Pitstop</h1>
         <div class="header-controls">
@@ -120,6 +124,7 @@
     </header>
 
     <main>
+        <!-- Operational Metrics Dashboard -->
         <section>
             <div class="stats-grid">
                 <div class="stat-card">
@@ -136,41 +141,48 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-lbl" data-i18n="totalSpent">Total Invested</div>
-                    <div class="stat-val" id="valSpent">$0.00</div>
+                    <div class="stat-val" id="valSpent">0.00</div>
                 </div>
             </div>
         </section>
 
+        <!-- Refill Interface Module -->
         <section>
             <div class="section-title" data-i18n="logRefill">Log Core Refill</div>
             <form id="logForm" onsubmit="saveRefillLog(event)" class="form-card">
-                <div class="input-group">
-                    <label data-i18n="lblOdo">Current Odometer Entry (km)</label>
-                    <input type="number" id="inpOdo" required min="0" placeholder="e.g. 142000">
-                </div>
                 <div class="input-row">
                     <div class="input-group">
-                        <label data-i18n="lblCost">Total Cost</label>
-                        <input type="number" id="inpCost" required step="0.01" min="0" placeholder="0.00">
+                        <label data-i18n="lblOdo">Odometer (km)</label>
+                        <input type="number" id="inpOdo" required min="0" placeholder="e.g. 142000">
                     </div>
                     <div class="input-group">
-                        <label data-i18n="lblLiters">Fuel Pumped (Liters)</label>
-                        <input type="number" id="inpLiters" required step="0.01" min="0" placeholder="0.00">
+                        <label data-i18n="lblCost">Total Cost (AED)</label>
+                        <input type="number" id="inpCost" required step="0.01" min="0" placeholder="0.00" oninput="calculateLitersFromPrice()">
                     </div>
                 </div>
                 <div class="input-row">
                     <div class="input-group">
                         <label data-i18n="lblGrade">Fuel Grade</label>
-                        <select id="inpGrade" style="padding: 12px; font-size:15px;">
-                            <option value="Special 95">Special 95</option>
+                        <select id="inpGrade" style="padding: 12px; font-size:15px;" onchange="updateDefaultPricePerLiter(); calculateLitersFromPrice();">
                             <option value="Super 98">Super 98</option>
+                            <option value="Special 95" selected>Special 95</option>
                             <option value="E-Plus 91">E-Plus 91</option>
                             <option value="Diesel">Diesel</option>
                         </select>
                     </div>
                     <div class="input-group">
+                        <label data-i18n="lblPricePerLiter">Price / Liter</label>
+                        <input type="number" id="inpPricePerLiter" required step="0.01" min="0" placeholder="e.g. 2.95" oninput="calculateLitersFromPrice()">
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label data-i18n="lblLiters">Calculated Liters</label>
+                        <input type="number" id="inpLiters" readonly step="0.01" style="background: var(--bg-card); color: var(--emerald); font-weight:600;" placeholder="0.00">
+                    </div>
+                    <div class="input-group">
                         <label data-i18n="lblDate">Log Date</label>
-                        <input type="date" id="inpDate" required>
+                        <input type="date" id="inpDate" required onchange="updateDefaultPricePerLiter(); calculateLitersFromPrice();">
                     </div>
                 </div>
                 <div class="checkbox-row">
@@ -185,6 +197,7 @@
             </form>
         </section>
 
+        <!-- Visualization Segment -->
         <section>
             <div class="section-title" data-i18n="chartTitle">Efficiency Performance Trend</div>
             <div class="chart-wrapper" id="chartBox">
@@ -192,6 +205,7 @@
             </div>
         </section>
 
+        <!-- Historic Archives -->
         <section>
             <div class="section-title">
                 <span data-i18n="activityRecords">Activity Records</span> 
@@ -200,6 +214,7 @@
             <div class="log-list" id="logsBox"></div>
         </section>
 
+        <!-- Data Core tools -->
         <section>
             <div class="section-title" data-i18n="sysUtilities">System & Storage Utilities</div>
             <div class="system-tools">
@@ -210,6 +225,7 @@
         </section>
     </main>
 
+    <!-- Garage Manager Panel Modal -->
     <div class="modal" id="garageModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -240,11 +256,19 @@
         };
         let activeChartInstance = null;
 
+        // Roughly pre-populate fuel price placeholders to minimize manual typing
+        const fuelPriceMatrix = {
+            "Super 98": 2.95,
+            "Special 95": 2.84,
+            "E-Plus 91": 2.76,
+            "Diesel": 3.10
+        };
+
         const i18n = {
             en: {
                 appTitle: "Pitstop", avgEff: "Avg Efficiency", costKm: "Cost Per KM", totalDist: "Total Distance",
-                totalSpent: "Total Invested", logRefill: "Log Core Refill", lblOdo: "Current Odometer Entry (km)",
-                lblCost: "Total Cost", lblLiters: "Fuel Pumped (Liters)", lblGrade: "Fuel Grade", lblDate: "Log Date",
+                totalSpent: "Total Invested", logRefill: "Log Core Refill", lblOdo: "Odometer Entry (km)",
+                lblCost: "Total Cost (AED)", lblPricePerLiter: "Price / Liter", lblLiters: "Calculated Liters", lblGrade: "Fuel Grade", lblDate: "Log Date",
                 optPartial: "Partial Fill-up (Omit logic math)", optMissed: "Missed preceding entry logs",
                 btnCommit: "Commit Refill Log", chartTitle: "Efficiency Performance Trend", activityRecords: "Activity Records",
                 sysUtilities: "System & Storage Utilities", btnExport: "Export JSON Backup", btnImport: "Import JSON Backup",
@@ -254,9 +278,9 @@
             },
             ar: {
                 appTitle: "بيتستوب", avgEff: "معدل الكفاءة", costKm: "التكلفة لكل كم", totalDist: "إجمالي المسافة",
-                totalSpent: "إجمالي المصروفات", logRefill: "تسجيل تعبئة وقود", lblOdo: "قراءة العداد الحالية (كم)",
-                lblCost: "التكلفة الإجمالية", lblLiters: "الوقود (باللتر)", lblGrade: "نوع الوقود", lblDate: "التاريخ",
-                optPartial: "تعبئة جزئية (تخطي الحساب الكفاءة)", optMissed: "فوت تسجيلات سابقة",
+                totalSpent: "إجمالي المصروفات", logRefill: "تسجيل تعبئة وقود", lblOdo: "قراءة العداد (كم)",
+                lblCost: "التكلفة الإجمالية (درهم)", lblPricePerLiter: "سعر اللتر", lblLiters: "اللترات المحسوبة", lblGrade: "نوع الوقود", lblDate: "التاريخ",
+                optPartial: "تعبئة جزئية (تخطي حساب الكفاءة)", optMissed: "فوت تسجيلات سابقة",
                 btnCommit: "حفظ السجل", chartTitle: "مؤشر أداء كفاءة الوقود", activityRecords: "سجل الأنشطة",
                 sysUtilities: "أدوات النظام والتخزين", btnExport: "تصدير نسخة احتياطية", btnImport: "استيراد نسخة احتياطية",
                 garageManagerTitle: "إدارة أسطول السيارات", lblAddVehicle: "إضافة اسم سيارة جديدة", btnAdd: "إضافة",
@@ -270,8 +294,28 @@
             loadAppState();
             applyTheme();
             applyLanguage();
+            updateDefaultPricePerLiter();
             buildUI();
         });
+
+        function updateDefaultPricePerLiter() {
+            const grade = document.getElementById('inpGrade').value;
+            if (fuelPriceMatrix[grade]) {
+                document.getElementById('inpPricePerLiter').value = fuelPriceMatrix[grade];
+            }
+        }
+
+        function calculateLitersFromPrice() {
+            const cost = parseFloat(document.getElementById('inpCost').value) || 0;
+            const pricePerLiter = parseFloat(document.getElementById('inpPricePerLiter').value) || 0;
+            const litersInput = document.getElementById('inpLiters');
+            
+            if (cost > 0 && pricePerLiter > 0) {
+                litersInput.value = (cost / pricePerLiter).toFixed(2);
+            } else {
+                litersInput.value = '';
+            }
+        }
 
         function loadAppState() {
             const raw = localStorage.getItem('pitstop_oled_state');
@@ -386,12 +430,19 @@
 
         function saveRefillLog(e) {
             e.preventDefault();
+            const calculatedLiters = parseFloat(document.getElementById('inpLiters').value);
+            
+            if (!calculatedLiters || calculatedLiters <= 0) {
+                alert("Please ensure Total Cost and Price/Liter are correctly entered.");
+                return;
+            }
+
             const newRecord = {
                 id: Date.now().toString(),
                 vehicle: appState.activeVehicle,
                 odometer: parseInt(document.getElementById('inpOdo').value),
                 cost: parseFloat(document.getElementById('inpCost').value),
-                liters: parseFloat(document.getElementById('inpLiters').value),
+                liters: calculatedLiters,
                 grade: document.getElementById('inpGrade').value,
                 date: document.getElementById('inpDate').value,
                 isPartial: document.getElementById('inpPartial').checked,
@@ -408,6 +459,7 @@
             document.getElementById('inpLiters').value = '';
             document.getElementById('inpPartial').checked = false;
             document.getElementById('inpMissed').checked = false;
+            updateDefaultPricePerLiter();
         }
 
         function deleteRecordLog(id) {
