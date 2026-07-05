@@ -2,461 +2,166 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pitstop - Fuel & Mileage Tracker</title>
-    <!-- Tailwind CSS for Android/Material Design Theme -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Chart.js for data visualization -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pitstop Aesthetic Showroom</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- PWA Web App Manifest (Corrected Start URL targeting /Fuel-tracker/ case-sensitive) -->
-    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Pitstop%20Fuel%20Tracker%22,%22short_name%22:%22Pitstop%22,%22start_url%22:%22/Fuel-tracker/%22,%22display%22:%22standalone%22,%22background_color%22:%22%23121212%22,%22theme_color%22:%22%230284c7%22,%22icons%22:[{%22src%22:%22https://img.icons8.com/fluency/512/gas-station.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
-    <meta name="theme-color" content="#0284c7">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    
     <style>
-        body {
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
-        input, select {
-            font-size: 16px !important;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #4b5563;
-            border-radius: 2px;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: #0a0a0a; color: #e5e5e5; padding: 20px; min-h: 100vh; }
+        .showroom-title { text-align: center; margin-bottom: 30px; color: #fff; }
+        .showroom-title p { color: #666; font-size: 14px; margin-top: 5px; }
+        
+        .grid-container { display: flex; flex-direction: column; gap: 40px; max-width: 450px; margin: 0 auto; }
+        .option-card { border: 2px dashed #333; padding: 10px; border-radius: 24px; background: #000; }
+        .option-label { color: #fff; font-weight: bold; margin-bottom: 10px; padding-left: 5px; font-size: 14px; text-transform: uppercase; tracking: 1px; }
+
+        /* OPTION A: MODERN MINIMALIST (OLED BLACK) */
+        .theme-a { background: #000000; color: #ffffff; border-radius: 16px; padding: 20px; border: 1px solid #111; }
+        .theme-a h1 { font-size: 18px; font-weight: 700; tracking: -0.5px; border-bottom: 1px solid #111; padding-bottom: 15px; display: flex; justify-content: space-between; }
+        .theme-a .stats { display: grid; grid-template-cols: 1fr 1fr; gap: 20px; margin: 20px 0; }
+        .theme-a .stat-lbl { font-size: 11px; color: #666; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+        .theme-a .stat-val { font-size: 20px; font-weight: 400; margin-top: 4px; color: #fff; }
+        .theme-a .btn { background: #ffffff; color: #000000; width: 100%; border: none; padding: 14px; border-radius: 8px; font-weight: 600; font-size: 14px; margin-top: 10px; text-align: center; }
+
+        /* OPTION B: MECHANICAL / TUNER CLUSTER */
+        .theme-b { background: #121416; color: #d1d5db; border-radius: 16px; padding: 20px; border: 2px solid #2d3139; font-family: 'Courier New', Courier, monospace; }
+        .theme-b h1 { font-size: 16px; font-weight: bold; color: #facc15; border-bottom: 2px md:#2d3139; padding-bottom: 10px; text-transform: uppercase; display: flex; justify-content: space-between; font-family: 'Courier New', Courier, monospace;}
+        .theme-b h1 ::before { content: "> "; }
+        .theme-b .stats { display: grid; grid-template-cols: 1fr 1fr; gap: 12px; margin: 20px 0; }
+        .theme-b .card { background: #1a1d21; border: 1px solid #374151; padding: 12px; border-radius: 4px; position: relative;}
+        .theme-b .stat-lbl { font-size: 10px; color: #9ca3af; font-weight: bold; text-transform: uppercase; }
+        .theme-b .stat-val { font-size: 18px; font-weight: bold; color: #34d399; margin-top: 5px; font-family: monospace; }
+        .theme-b .cost { color: #f87171; }
+        .theme-b .btn { background: #facc15; color: #000; width: 100%; border: none; padding: 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; border-radius: 4px; font-family: monospace; box-shadow: 3px 3px 0px #1e1b4b; }
+
+        /* OPTION C: WARM RETRO / VINTAGE HERITAGE */
+        .theme-c { background: #1b2421; color: #f4efe2; border-radius: 16px; padding: 20px; border: 1px solid #2c3b36; }
+        .theme-c h1 { font-size: 18px; font-family: Georgia, serif; font-style: italic; color: #dfd5be; border-bottom: 1px solid #2c3b36; padding-bottom: 12px; display: flex; justify-content: space-between; }
+        .theme-c .stats { display: grid; grid-template-cols: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        .theme-c .stat-lbl { font-size: 12px; color: #8fa499; font-family: Georgia, serif; font-weight: normal; text-transform: capitalize; }
+        .theme-c .stat-val { font-size: 22px; font-family: Georgia, serif; color: #dfd5be; margin-top: 2px; }
+        .theme-c .btn { background: transparent; color: #dfd5be; width: 100%; border: 1px solid #dfd5be; padding: 12px; border-radius: 20px; font-size: 13px; font-family: Georgia, serif; transition: all 0.2s; }
+        
+        .chart-box { height: 100px; width: 100%; margin-top: 15px; opacity: 0.8; }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans min-h-screen transition-colors duration-200 dynamic-dark">
+<body>
 
-    <!-- Top App Bar -->
-    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50 px-4 py-3 flex items-center justify-between shadow-md">
-        <div class="flex items-center space-x-3">
-            <span class="text-2xl">⛽</span>
-            <h1 class="text-xl font-bold tracking-wide text-sky-400">Pitstop</h1>
-        </div>
-        <div class="flex items-center space-x-2">
-            <select id="globalVehicleFilter" onchange="switchVehicle(this.value)" class="bg-gray-700 text-sm rounded-lg p-2 border border-gray-600 focus:outline-none focus:border-sky-500 font-medium">
-                <option value="Car A">🚗 Car A</option>
-                <option value="Car B">🚙 Car B</option>
-            </select>
-            <button onclick="toggleDarkMode()" class="p-2 rounded-full bg-gray-700 hover:bg-gray-600 active:scale-95 transition-transform text-lg" title="Toggle Theme">🌓</button>
-        </div>
-    </header>
+    <div class="showroom-title">
+        <h2>Pitstop Visual Showroom</h2>
+        <p>Review these live mockups directly on your mobile interface.</p>
+    </div>
 
-    <main class="max-w-md mx-auto p-4 pb-24 space-y-6">
+    <div class="grid-container">
 
-        <!-- STATS DASHBOARD CARDS -->
-        <section class="grid grid-cols-2 gap-3">
-            <div class="bg-gradient-to-br from-gray-800 to-gray-850 p-4 rounded-2xl border border-gray-700 shadow-sm">
-                <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Avg Efficiency</p>
-                <p id="statEfficiency" class="text-xl font-black text-emerald-400 mt-1">-- <span class="text-xs font-normal text-gray-400">km/L</span></p>
-            </div>
-            <div class="bg-gradient-to-br from-gray-800 to-gray-850 p-4 rounded-2xl border border-gray-700 shadow-sm">
-                <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Cost per KM</p>
-                <p id="statCostPerKm" class="text-xl font-black text-amber-400 mt-1">-- <span class="text-xs font-normal text-gray-400">/km</span></p>
-            </div>
-            <div class="bg-gradient-to-br from-gray-800 to-gray-850 p-4 rounded-2xl border border-gray-700 shadow-sm">
-                <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Total Distance</p>
-                <p id="statDistance" class="text-xl font-black text-sky-400 mt-1">0 <span class="text-xs font-normal text-gray-400">km</span></p>
-            </div>
-            <div class="bg-gradient-to-br from-gray-800 to-gray-850 p-4 rounded-2xl border border-gray-700 shadow-sm">
-                <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Total Spent</p>
-                <p id="statSpent" class="text-xl font-black text-rose-400 mt-1">$0.00</p>
-            </div>
-        </section>
-
-        <!-- NEW REFILL ENTRY FORM -->
-        <section class="bg-gray-800 p-5 rounded-2xl border border-gray-700 shadow-md space-y-4">
-            <h2 class="text-lg font-bold flex items-center gap-2 text-gray-200">📝 Log New Refill</h2>
-            <form id="fuelForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Odometer Reading (km)</label>
-                    <input type="number" id="inputOdo" required min="0" placeholder="e.g. 45200" class="w-full bg-gray-900 border border-gray-600 rounded-xl p-3.5 text-lg font-semibold text-white focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-950 transition-all">
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
+        <div class="option-card">
+            <div class="option-label">Option A: Modern Minimalist</div>
+            <div class="theme-a">
+                <h1><span>Pitstop</span> <span style="font-size:13px; font-weight:normal; color:#666">Golf GTI</span></h1>
+                <div class="stats">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Total Cost</label>
-                        <input type="number" id="inputCost" required step="0.01" min="0" placeholder="0.00" class="w-full bg-gray-900 border border-gray-600 rounded-xl p-3.5 text-lg font-semibold text-white focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-950 transition-all">
+                        <div class="stat-lbl">Avg Efficiency</div>
+                        <div class="stat-val">14.2 km/L</div>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Liters Pumped</label>
-                        <input type="number" id="inputLiters" required step="0.01" min="0" placeholder="0.00" class="w-full bg-gray-900 border border-gray-600 rounded-xl p-3.5 text-lg font-semibold text-white focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-950 transition-all">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Fuel Grade</label>
-                        <select id="inputGrade" class="w-full bg-gray-900 border border-gray-600 rounded-xl p-3.5 text-base font-medium text-white focus:outline-none focus:border-sky-500 transition-all">
-                            <option value="Special 95">Special 95</option>
-                            <option value="Super 98">Super 98</option>
-                            <option value="E-Plus 91">E-Plus 91</option>
-                            <option value="Diesel">Diesel</option>
-                        </select>
+                        <div class="stat-lbl">Cost Per KM</div>
+                        <div class="stat-val">0.32 AED</div>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Date</label>
-                        <input type="date" id="inputDate" required class="w-full bg-gray-900 border border-gray-600 rounded-xl p-3.5 text-base font-medium text-white focus:outline-none focus:border-sky-500 transition-all">
+                        <div class="stat-lbl">Total Distance</div>
+                        <div class="stat-val">412,500 km</div>
+                    </div>
+                    <div>
+                        <div class="stat-lbl">Total Spent</div>
+                        <div class="stat-val">12,450 AED</div>
                     </div>
                 </div>
-
-                <div class="flex flex-col gap-2 pt-1 text-sm bg-gray-900 p-3 rounded-xl border border-gray-700">
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="checkbox" id="inputPartial" class="w-5 h-5 rounded border-gray-600 text-sky-500 focus:ring-0 focus:ring-offset-0 bg-gray-800">
-                        <span class="text-gray-300 font-medium">Partial Fill-up <span class="text-xs text-gray-500">(Skip efficiency math)</span></span>
-                    </label>
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="checkbox" id="inputMissed" class="w-5 h-5 rounded border-gray-600 text-sky-500 focus:ring-0 focus:ring-offset-0 bg-gray-800">
-                        <span class="text-gray-300 font-medium">Missed previous log(s)</span>
-                    </label>
-                </div>
-
-                <button type="submit" class="w-full bg-sky-600 hover:bg-sky-500 active:scale-[0.99] text-white font-bold py-4 px-4 rounded-xl text-lg shadow-lg shadow-sky-950 transition-all flex justify-center items-center gap-2">
-                    💾 Save Refill Log
-                </button>
-            </form>
-        </section>
-
-        <!-- VISUALIZATIONS (CHARTS) -->
-        <section class="bg-gray-800 p-4 rounded-2xl border border-gray-700 shadow-md space-y-4">
-            <div class="flex justify-between items-center">
-                <h2 class="text-lg font-bold text-gray-200">📈 Analytics Trends</h2>
-                <select id="chartMetricSelector" onchange="renderCharts()" class="bg-gray-900 border border-gray-600 text-xs rounded-lg p-1.5 focus:outline-none text-gray-300">
-                    <option value="efficiency">Fuel Efficiency Trend</option>
-                    <option value="costVsDist">Cost vs Distance</option>
-                    <option value="monthly">Monthly Spending</option>
-                </select>
-            </div>
-            <div class="relative w-full h-64 bg-gray-900 p-2 rounded-xl border border-gray-700">
-                <canvas id="analyticsChart"></canvas>
-            </div>
-        </section>
-
-        <!-- FILTERS & SEARCH MODULE -->
-        <section class="bg-gray-800 p-4 rounded-2xl border border-gray-700 shadow-md space-y-3">
-            <h2 class="text-sm font-bold uppercase tracking-wider text-gray-400">🔍 Filter Logs</h2>
-            <input type="text" id="searchBar" oninput="filterAndRenderLogs()" placeholder="Search logs (e.g. 98, Partial)..." class="w-full bg-gray-900 border border-gray-600 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-sky-500">
-            
-            <div class="grid grid-cols-2 gap-2 text-xs">
-                <select id="filterTimeline" onchange="filterAndRenderLogs()" class="w-full bg-gray-900 border border-gray-600 rounded-lg p-2.5 text-gray-300 focus:outline-none">
-                    <option value="all">All Time</option>
-                    <option value="month">This Month</option>
-                    <option value="year">This Year</option>
-                </select>
-                <select id="filterGrade" onchange="filterAndRenderLogs()" class="w-full bg-gray-900 border border-gray-600 rounded-lg p-2.5 text-gray-300 focus:outline-none">
-                    <option value="all">All Fuel Grades</option>
-                    <option value="Special 95">Special 95</option>
-                    <option value="Super 98">Super 98</option>
-                    <option value="E-Plus 91">E-Plus 91</option>
-                    <option value="Diesel">Diesel</option>
-                </select>
-            </div>
-        </section>
-
-        <!-- TRASH TOAST -->
-        <div id="trashToast" class="hidden bg-yellow-600 text-slate-900 p-4 rounded-xl flex items-center justify-between shadow-xl font-semibold animate-pulse">
-            <span id="trashToastMsg">Entry moved to Trash.</span>
-            <div class="flex space-x-3 text-sm">
-                <button onclick="restoreFromTrash()" class="bg-slate-900 text-yellow-400 px-3 py-1.5 rounded-lg active:scale-95 transition-transform">Undo</button>
-                <button onclick="clearTrashForever()" class="text-slate-900 underline underline-offset-2">Dismiss</button>
+                <div class="chart-box"><canvas id="chartA"></canvas></div>
+                <button class="btn">Log Refill</button>
             </div>
         </div>
 
-        <!-- REFILL HISTORY LIST -->
-        <section class="space-y-2">
-            <div class="flex justify-between items-center px-1">
-                <h2 class="text-base font-bold text-gray-300">📋 Activity Log</h2>
-                <span id="logCount" class="text-xs bg-gray-700 px-2 py-0.5 rounded-full text-gray-400 font-bold">0 records</span>
+        <div class="option-card">
+            <div class="option-label">Option B: Mechanical Cluster</div>
+            <div class="theme-b">
+                <h1><span>SYS.LOG</span> <span style="color:#9ca3af; font-size:12px;">[GTI_MK7]</span></h1>
+                <div class="stats">
+                    <div class="card">
+                        <div class="stat-lbl">EFF_VAL</div>
+                        <div class="stat-val">14.20 KM/L</div>
+                    </div>
+                    <div class="card">
+                        <div class="stat-lbl">RUN_COST</div>
+                        <div class="stat-val cost">0.32 AED</div>
+                    </div>
+                    <div class="card">
+                        <div class="stat-lbl">ODO_DIST</div>
+                        <div class="stat-val" style="color:#38bdf8">412,500 KM</div>
+                    </div>
+                    <div class="card">
+                        <div class="stat-lbl">TTL_CASH</div>
+                        <div class="stat-val cost">12,450 AED</div>
+                    </div>
+                </div>
+                <div class="chart-box"><canvas id="chartB"></canvas></div>
+                <button class="btn">+ EXECUTE_NEW_LOG</button>
             </div>
-            <div id="logsContainer" class="space-y-2 max-h-96 overflow-y-auto custom-scrollbar pr-1">
-                <p class="text-center text-sm text-gray-500 py-6">No records added yet.</p>
-            </div>
-        </section>
+        </div>
 
-        <!-- DATA STORAGE & COMPLIANCE TOOLS -->
-        <section class="bg-gray-800/60 border border-gray-700/60 p-4 rounded-2xl text-center space-y-3">
-            <p class="text-xs text-gray-400">All data securely hosted in offline local browser cache storage.</p>
-            <div class="grid grid-cols-3 gap-2">
-                <button onclick="exportJSON()" class="bg-gray-700 hover:bg-gray-600 text-gray-200 font-medium py-2 px-1 rounded-lg text-xs active:scale-95 transition-transform">📤 Export JSON</button>
-                <button onclick="document.getElementById('importFile').click()" class="bg-gray-700 hover:bg-gray-600 text-gray-200 font-medium py-2 px-1 rounded-lg text-xs active:scale-95 transition-transform">📥 Import JSON</button>
-                <button onclick="exportCSV()" class="bg-gray-700 hover:bg-gray-600 text-gray-200 font-medium py-2 px-1 rounded-lg text-xs active:scale-95 transition-transform">📊 Excel CSV</button>
+        <div class="option-card">
+            <div class="option-label">Option C: Vintage Heritage</div>
+            <div class="theme-c">
+                <h1><span>Pitstop Motorist</span> <span style="font-size:12px; font-family:sans-serif; color:#8fa499">Garage No. 1</span></h1>
+                <div class="stats">
+                    <div>
+                        <div class="stat-lbl">Fuel economy</div>
+                        <div class="stat-val">14.2 km/L</div>
+                    </div>
+                    <div>
+                        <div class="stat-lbl">Cost per kilometer</div>
+                        <div class="stat-val">0.32 AED</div>
+                    </div>
+                    <div>
+                        <div class="stat-lbl">Total mileage</div>
+                        <div class="stat-val">412,500 km</div>
+                    </div>
+                    <div>
+                        <div class="stat-lbl">Total expenses</div>
+                        <div class="stat-val">12,450 AED</div>
+                    </div>
+                </div>
+                <div class="chart-box"><canvas id="chartC"></canvas></div>
+                <button class="btn">Register Entry</button>
             </div>
-            <input type="file" id="importFile" accept=".json" class="hidden" onchange="importJSON(event)">
-        </section>
+        </div>
 
-    </main>
+    </div>
 
     <script>
-        let state = { logs: [], currentVehicle: 'Car A', isDark: true, trash: null };
-        let activeChart = null;
+        const chartOptions = {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { display: false }, y: { display: false } },
+            elements: { point: { radius: 0 } }
+        };
 
-        window.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('inputDate').value = new Date().toISOString().split('T')[0];
-            if (localStorage.getItem('pitstop_state')) {
-                try {
-                    const savedState = JSON.parse(localStorage.getItem('pitstop_state'));
-                    state.logs = savedState.logs || [];
-                    state.currentVehicle = savedState.currentVehicle || 'Car A';
-                    state.isDark = savedState.isDark !== undefined ? savedState.isDark : true;
-                } catch(e) {}
-            } else {
-                state.isDark = !(window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches);
-            }
-            document.getElementById('globalVehicleFilter').value = state.currentVehicle;
-            applyThemeStyles();
-            processCalculationsAndRender();
-
-            // Fire Service Worker Engine Setup
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js')
-                    .then(() => console.log('Offline Core Active'))
-                    .catch(err => console.error('Offline Boot Failure', err));
-            }
+        new Chart(document.getElementById('chartA'), {
+            type: 'line',
+            data: { labels: [1,2,3,4,5], datasets: [{ data: [12, 15, 13, 16, 14.2], borderColor: '#ffffff', borderWidth: 1.5, tension: 0.2 }] },
+            options: chartOptions
         });
 
-        function saveToLocalStorage() {
-            localStorage.setItem('pitstop_state', JSON.stringify({
-                logs: state.logs, currentVehicle: state.currentVehicle, isDark: state.isDark
-            }));
-        }
+        new Chart(document.getElementById('chartB'), {
+            type: 'line',
+            data: { labels: [1,2,3,4,5], datasets: [{ data: [12, 15, 13, 16, 14.2], borderColor: '#34d399', borderWidth: 2, stepped: true }] },
+            options: chartOptions
+        });
 
-        function toggleDarkMode() {
-            state.isDark = !state.isDark;
-            applyThemeStyles();
-            saveToLocalStorage();
-            renderCharts();
-        }
-
-        function applyThemeStyles() {
-            const body = document.body;
-            if (state.isDark) {
-                body.classList.remove('bg-gray-100', 'text-gray-900');
-                body.classList.add('bg-gray-900', 'text-gray-100');
-            } else {
-                body.classList.remove('bg-gray-900', 'text-gray-100');
-                body.classList.add('bg-gray-100', 'text-gray-900');
-            }
-        }
-
-        function switchVehicle(vehicle) {
-            state.currentVehicle = vehicle;
-            saveToLocalStorage();
-            processCalculationsAndRender();
-        }
-
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            const newLog = {
-                id: Date.now().toString(),
-                vehicle: state.currentVehicle,
-                odometer: parseInt(document.getElementById('inputOdo').value),
-                cost: parseFloat(document.getElementById('inputCost').value),
-                liters: parseFloat(document.getElementById('inputLiters').value),
-                grade: document.getElementById('inputGrade').value,
-                date: document.getElementById('inputDate').value,
-                isPartial: document.getElementById('inputPartial').checked,
-                isMissed: document.getElementById('inputMissed').checked
-            };
-            state.logs.push(newLog);
-            state.logs.sort((a, b) => new Date(a.date) - new Date(b.date));
-            saveToLocalStorage();
-            processCalculationsAndRender();
-            
-            document.getElementById('inputOdo').value = '';
-            document.getElementById('inputCost').value = '';
-            document.getElementById('inputLiters').value = '';
-            document.getElementById('inputPartial').checked = false;
-            document.getElementById('inputMissed').checked = false;
-        }
-
-        function processCalculationsAndRender() {
-            const currentVehicleLogs = state.logs.filter(log => log.vehicle === state.currentVehicle);
-            let totalSpent = 0, totalLitersCalculated = 0, totalDistanceCalculated = 0;
-
-            for (let i = 0; i < currentVehicleLogs.length; i++) {
-                totalSpent += currentVehicleLogs[i].cost;
-                let prevLog = i > 0 ? currentVehicleLogs[i - 1] : null;
-
-                if (prevLog && !currentVehicleLogs[i].isMissed) {
-                    const distanceSegment = currentVehicleLogs[i].odometer - prevLog.odometer;
-                    currentVehicleLogs[i].calculatedDistance = distanceSegment;
-                    
-                    if (!currentVehicleLogs[i].isPartial && !prevLog.isPartial) {
-                        currentVehicleLogs[i].calculatedEfficiency = distanceSegment / currentVehicleLogs[i].liters;
-                        currentVehicleLogs[i].calculatedCostPerKm = currentVehicleLogs[i].cost / distanceSegment;
-                        totalLitersCalculated += currentVehicleLogs[i].liters;
-                        totalDistanceCalculated += distanceSegment;
-                    }
-                }
-            }
-
-            const totalOdoDistance = currentVehicleLogs.length > 1 ? 
-                (currentVehicleLogs[currentVehicleLogs.length - 1].odometer - currentVehicleLogs[0].odometer) : 0;
-
-            document.getElementById('statDistance').innerHTML = `${totalOdoDistance.toLocaleString()} <span class="text-xs font-normal text-gray-400">km</span>`;
-            document.getElementById('statSpent').innerText = `$${totalSpent.toFixed(2)}`;
-
-            if (totalDistanceCalculated > 0 && totalLitersCalculated > 0) {
-                document.getElementById('statEfficiency').innerHTML = `${(totalDistanceCalculated / totalLitersCalculated).toFixed(2)} <span class="text-xs font-normal text-gray-400">km/L</span>`;
-                document.getElementById('statCostPerKm').innerHTML = `$${(totalSpent / totalOdoDistance).toFixed(2)}<span class="text-xs font-normal text-gray-400">/km</span>`;
-            } else {
-                document.getElementById('statEfficiency').innerHTML = `-- <span class="text-xs font-normal text-gray-400">km/L</span>`;
-                document.getElementById('statCostPerKm').innerHTML = `-- <span class="text-xs font-normal text-gray-400">/km</span>`;
-            }
-            filterAndRenderLogs();
-        }
-
-        function filterAndRenderLogs() {
-            const query = document.getElementById('searchBar').value.toLowerCase();
-            const timeline = document.getElementById('filterTimeline').value;
-            const gradeFilter = document.getElementById('filterGrade').value;
-            const now = new Date(), currentYear = now.getFullYear(), currentMonth = now.getMonth();
-
-            const filteredLogs = state.logs.filter(log => {
-                if (log.vehicle !== state.currentVehicle) return false;
-                const logDate = new Date(log.date);
-                if (timeline === 'month' && (logDate.getMonth() !== currentMonth || logDate.getFullYear() !== currentYear)) return false;
-                if (timeline === 'year' && logDate.getFullYear() !== currentYear) return false;
-                if (gradeFilter !== 'all' && log.grade !== gradeFilter) return false;
-                return `${log.odometer} ${log.cost} ${log.grade} ${log.date}`.toLowerCase().includes(query);
-            }).reverse();
-
-            document.getElementById('logCount').innerText = `${filteredLogs.length} records`;
-            const container = document.getElementById('logsContainer');
-            
-            if (filteredLogs.length === 0) {
-                container.innerHTML = `<p class="text-center text-sm text-gray-500 py-6">No history logs discovered.</p>`;
-                renderCharts();
-                return;
-            }
-
-            container.innerHTML = filteredLogs.map(log => {
-                const effText = log.calculatedEfficiency ? `${log.calculatedEfficiency.toFixed(1)} km/L` : (log.isPartial ? 'Partial Fill' : '--');
-                return `
-                    <div class="bg-gray-800 p-3.5 rounded-xl border border-gray-700 flex justify-between items-center shadow-sm">
-                        <div class="space-y-1">
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs bg-gray-700 px-2 py-0.5 rounded text-gray-300 font-mono">${log.date}</span>
-                                <span class="text-xs font-semibold text-sky-400">${log.grade}</span>
-                            </div>
-                            <p class="text-base font-bold text-gray-100">${log.odometer.toLocaleString()} km <span class="text-xs font-normal text-gray-400">(${log.calculatedDistance ? '+' + log.calculatedDistance + ' km' : 'Setup'})</span></p>
-                        </div>
-                        <div class="text-right flex items-center space-x-3">
-                            <div>
-                                <p class="text-base font-black text-rose-400">$${log.cost.toFixed(2)}</p>
-                                <p class="text-xs font-bold text-emerald-400">${effText}</p>
-                            </div>
-                            <button onclick="moveEntryToTrash('${log.id}')" class="p-2 text-gray-500 hover:text-rose-400 text-lg">🗑️</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            renderCharts();
-        }
-
-        function moveEntryToTrash(id) {
-            const index = state.logs.findIndex(log => log.id === id);
-            if (index !== -1) {
-                state.trash = state.logs[index];
-                state.logs.splice(index, 1);
-                saveToLocalStorage();
-                processCalculationsAndRender();
-                document.getElementById('trashToast').classList.remove('hidden');
-            }
-        }
-
-        function restoreFromTrash() {
-            if (state.trash) {
-                state.logs.push(state.trash);
-                state.logs.sort((a, b) => new Date(a.date) - new Date(b.date));
-                state.trash = null;
-                saveToLocalStorage();
-                processCalculationsAndRender();
-                document.getElementById('trashToast').classList.add('hidden');
-            }
-        }
-
-        function clearTrashForever() { state.trash = null; document.getElementById('trashToast').classList.add('hidden'); }
-
-        function renderCharts() {
-            const ctx = document.getElementById('analyticsChart').getContext('2d');
-            const metric = document.getElementById('chartMetricSelector').value;
-            const currentVehicleLogs = state.logs.filter(log => log.vehicle === state.currentVehicle);
-
-            if (activeChart) activeChart.destroy();
-            if (currentVehicleLogs.length === 0) return;
-
-            const textColor = state.isDark ? '#9ca3af' : '#374151';
-            const gridColor = state.isDark ? '#374151' : '#e5e7eb';
-            let config = {};
-
-            if (metric === 'efficiency') {
-                const pts = currentVehicleLogs.filter(l => l.calculatedEfficiency !== undefined);
-                config = {
-                    type: 'line',
-                    data: {
-                        labels: pts.map(l => l.date),
-                        datasets: [{ label: 'km/L', data: pts.map(l => l.calculatedEfficiency), borderColor: '#34d399', backgroundColor: 'rgba(52, 211, 153, 0.1)', tension: 0.3, fill: true }]
-                    }
-                };
-            } else if (metric === 'costVsDist') {
-                const pts = currentVehicleLogs.filter(l => l.calculatedDistance !== undefined);
-                config = {
-                    type: 'line',
-                    data: {
-                        labels: pts.map(l => l.date),
-                        datasets: [
-                            { label: 'Cost ($)', data: pts.map(l => l.cost), borderColor: '#f87171', yAxisID: 'y' },
-                            { label: 'Distance (km)', data: pts.map(l => l.calculatedDistance), borderColor: '#38bdf8', yAxisID: 'y1' }
-                        ]
-                    },
-                    options: { scales: { y: { position: 'left', ticks: { color: textColor } }, y1: { position: 'right', grid: { drawOnChartArea: false }, ticks: { color: textColor } } } }
-                };
-            } else if (metric === 'monthly') {
-                const map = {};
-                currentVehicleLogs.forEach(l => { const k = l.date.substring(0,7); map[k] = (map[k] || 0) + l.cost; });
-                config = {
-                    type: 'bar',
-                    data: { labels: Object.keys(map), datasets: [{ label: 'Monthly Spent ($)', data: Object.values(map), backgroundColor: '#fbbf24' }] }
-                };
-            }
-
-            config.options = config.options || {};
-            config.options.responsive = true;
-            config.options.maintainAspectRatio = false;
-            config.options.plugins = { legend: { labels: { color: textColor } } };
-            config.options.scales = config.options.scales || { x: { grid: { color: gridColor }, ticks: { color: textColor } }, y: { grid: { color: gridColor }, ticks: { color: textColor } } };
-            activeChart = new Chart(ctx, config);
-        }
-
-        function exportJSON() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
-            const dl = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", `pitstop_backup.json`); dl.click();
-        }
-
-        function importJSON(e) {
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                try {
-                    const parsed = JSON.parse(evt.target.result);
-                    if (parsed.logs) { state.logs = parsed.logs; saveToLocalStorage(); processCalculationsAndRender(); alert("Imported!"); }
-                } catch (err) { alert("Invalid file"); }
-            };
-            reader.readAsText(e.target.files[0]);
-        }
-
-        function exportCSV() {
-            let csv = "data:text/csv;charset=utf-8,Date,Vehicle,Odometer,Cost,Liters,Grade\n";
-            state.logs.filter(l => l.vehicle === state.currentVehicle).forEach(l => { csv += `${l.date},${l.vehicle},${l.odometer},${l.cost},${l.liters},${l.grade}\n`; });
-            const dl = document.createElement('a'); dl.setAttribute("href", encodeURI(csv)); dl.setAttribute("download", `pitstop.csv`); dl.click();
-        }
+        new Chart(document.getElementById('chartC'), {
+            type: 'line',
+            data: { labels: [1,2,3,4,5], datasets: [{ data: [12, 15, 13, 16, 14.2], borderColor: '#dfd5be', borderWidth: 1, backgroundColor: 'rgba(223,213,190,0.05)', fill: true, tension: 0.4 }] },
+            options: chartOptions
+        });
     </script>
 </body>
 </html>
