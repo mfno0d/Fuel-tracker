@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pitstop - Fuel & Mileage Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Pitstop%20Fuel%20Tracker%22,%22short_name%22:%22Pitstop%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23121212%22,%22theme_color%22:%22%230284c7%22,%22icons%22:[{%22src%22:%22https://img.icons8.com/fluency/512/gas-station.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
+    <meta name="theme-color" content="#0284c7">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        input, select {
+            font-size: 16px !important;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen transition-colors duration-200 dynamic-dark">
+
+    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50 px-4 py-3 flex items-center justify-between shadow-md">
+        <div class="flex items-center space-x-3">
+            <span class="text-2xl">⛽</span>
+            <h1 class="text-xl font-bold tracking-wide text-sky-400">Pitstop</h1>
+        </div>
+        <div class="flex items-center space-x-2">
+            <select id="globalVehicleFilter" onchange="switchVehicle(this.value)" class="bg-gray-700 text-sm rounded-lg p-2 border border-gray-600 focus:outline-none focus:border-sky-500 font-medium">
+                <option value="Car A">🚗 Car A</option>
+                <option value="Car B">🚙 Car B</option>
+            </select>
+            <button onclick="toggleDarkMode()" class="p-2 rounded-full bg-gray-700 hover:bg-gray-600 active:scale-95 transition-transform text-lg" title="Toggle Theme">🌓</button>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto p-4 pb-24 space-y-6">
+
+        <section class="grid grid-cols-2 gap-3">
+            <div class="bg-gradient-to-br from-gray-800 to-gray-850 p-4 rounded-2xl border border-gray-700 shadow-sm">
+                <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Avg Efficiency</p>
+                <p id="statEfficiency" class="text-xl font-black text-emerald-400 mt-1">-- <span class="text-xs font-normal text-gray-400">km/L</span></p>
+            </div>
+            <div class="bg-gradient-to-br from-gray-800 to-gray-850 p-4 rounded-2xl border border-gray-700 shadow-sm">
+                <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Cost per KM</p>
+                <p id="statCostPerKm" class="text-xl font-black text-amber-400 mt-1">-- <span class="text-xs font-normal text-gray-400">/km</span></p>
+            </div>
+            <div class="bg-gradient-to-br from-gray-800 to-gray-850 p-4 rounded-2xl border border-gray-700 shadow-sm">
+                <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Total Distance</p>
+                <p id="statDistance" class="text-xl font-black text-sky-400 mt-1">0 <span class="text-xs font-normal text-gray-400">km</span></p>
+            </div>
+            <div class="bg-gradient-to-br from-gray-8
