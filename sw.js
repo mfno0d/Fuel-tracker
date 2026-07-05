@@ -1,4 +1,5 @@
-const CACHE_NAME = 'pitstop-v1';
+const CACHE_NAME = 'pitstop-v2'; // Changing v1 to v2 breaks the old cache
+
 const ASSETS = [
   './',
   './index.html',
