@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pitstop-v5'; // Changing v1 to v2 breaks the old cache
+const CACHE_NAME = 'pitstop-v6'; // Changing v1 to v2 breaks the old cache
 
 const ASSETS = [
   './',
