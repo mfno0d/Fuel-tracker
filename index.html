@@ -17,25 +17,37 @@
             --bg-card: #0a0a0a;
             --border-color: #1a1a1a;
             --text-main: #ffffff;
-            --text-muted: #666667;
+            --text-muted: #666666;
             --accent: #ffffff;
-            --accent-dim: #111111;
             --emerald: #34d399;
             --amber: #fbbf24;
             --rose: #f87171;
         }
 
+        [data-theme="light"] {
+            --bg-main: #f4f4f5;
+            --bg-card: #ffffff;
+            --border-color: #e4e4e7;
+            --text-main: #09090b;
+            --text-muted: #71717a;
+            --accent: #09090b;
+            --emerald: #10b981;
+            --amber: #d97706;
+            --rose: #dc2626;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background: var(--bg-main); color: var(--text-main); -webkit-tap-highlight-color: transparent; min-height: 100vh; padding-bottom: 40px; }
+        body { background: var(--bg-main); color: var(--text-main); -webkit-tap-highlight-color: transparent; min-height: 100vh; padding-bottom: 40px; transition: background 0.2s, color 0.2s; }
         
-        header { background: var(--bg-main); border-b: 1px solid var(--border-color); padding: 20px; sticky: top; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        [dir="rtl"] { font-family: system-ui, -apple-system, sans-serif; }
+
+        header { background: var(--bg-main); border-b: 1px solid var(--border-color); padding: 20px; display: flex; justify-content: space-between; align-items: center; }
         h1 { font-size: 20px; font-weight: 700; tracking: -0.5px; }
         
-        .garage-selector-wrapper { display: flex; align-items: center; gap: 8px; }
+        .header-controls { display: flex; align-items: center; gap: 8px; }
         select { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: 500; outline: none; }
         
-        .btn-small { background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-color); padding: 8px; border-radius: 6px; font-size: 13px; cursor: pointer; }
-        .btn-small:active { color: var(--text-main); }
+        .btn-small { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px 10px; border-radius: 6px; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; min-width: 34px; height: 34px; }
 
         main { max-width: 450px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; gap: 30px; }
         
@@ -53,10 +65,10 @@
         .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
         input[type="number"], input[type="date"], input[type="text"] { background: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; font-size: 16px; outline: none; width: 100%; }
-        input:focus { border-color: #444; }
+        input:focus { border-color: var(--text-muted); }
         
         .checkbox-row { background: var(--bg-main); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 10px; }
-        .checkbox-lbl { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-main); text-transform: none; font-weight: normal; cursor: pointer; }
+        .checkbox-lbl { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-main); cursor: pointer; }
         .checkbox-lbl input { width: 16px; height: 16px; accent-color: var(--text-main); }
 
         .btn-primary { background: var(--text-main); color: var(--bg-main); border: none; padding: 14px; border-radius: 8px; font-weight: 600; font-size: 15px; cursor: pointer; width: 100%; text-align: center; }
@@ -68,10 +80,13 @@
         /* Activity List */
         .log-list { display: flex; flex-direction: column; gap: 10px; max-height: 350px; overflow-y: auto; }
         .log-item { background: var(--bg-card); border: 1px solid var(--border-color); padding: 14px 18px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
+        [dir="rtl"] .log-item { flex-direction: row-reverse; }
         .log-meta { display: flex; flex-direction: column; gap: 4px; }
+        [dir="rtl"] .log-meta { text-align: right; }
         .log-date-badge { font-size: 11px; color: var(--text-muted); font-weight: 600; }
         .log-main-specs { font-size: 15px; font-weight: 500; }
         .log-right { text-align: right; display: flex; align-items: center; gap: 15px; }
+        [dir="rtl"] .log-right { flex-direction: row-reverse; text-align: left; }
         .log-cost { font-size: 16px; font-weight: 600; }
         .log-eff { font-size: 12px; color: var(--emerald); margin-top: 2px; }
         .btn-delete { background: transparent; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; padding: 5px; }
@@ -80,21 +95,25 @@
         /* Modal Panels */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; width: 100%; max-width: 380px; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+        [dir="rtl"] .modal-content { text-align: right; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; }
+        [dir="rtl"] .modal-header { flex-direction: row-reverse; }
         .modal-close { background: transparent; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; }
 
         .garage-list { display: flex; flex-direction: column; gap: 8px; max-height: 150px; overflow-y: auto; margin-top: 5px; }
         .garage-item { display: flex; justify-content: space-between; align-items: center; background: var(--bg-main); border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; font-size: 13px; }
+        [dir="rtl"] .garage-item { flex-direction: row-reverse; }
 
         .system-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .btn-tool { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; font-size: 12px; font-weight: 500; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Pitstop</h1>
-        <div class="garage-selector-wrapper">
+        <h1 data-i18n="appTitle">Pitstop</h1>
+        <div class="header-controls">
+            <button class="btn-small" onclick="toggleLanguage()" id="langBtn" title="Language">العربية</button>
+            <button class="btn-small" onclick="toggleTheme()" id="themeBtn" title="Theme">☀️</button>
             <select id="vehicleSelect" onchange="changeActiveVehicle(this.value)"></select>
             <button class="btn-small" onclick="openGarageModal()" title="Manage Garage">⚙️</button>
         </div>
@@ -104,44 +123,44 @@
         <section>
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-lbl">Avg Efficiency</div>
-                    <div class="stat-val" id="valEff" style="color: var(--emerald);">-- <span style="font-size:12px; color:var(--text-muted);">km/L</span></div>
+                    <div class="stat-lbl" data-i18n="avgEff">Avg Efficiency</div>
+                    <div class="stat-val" id="valEff" style="color: var(--emerald);">-- <span style="font-size:12px; color:var(--text-muted);" data-i18n="kmL">km/L</span></div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-lbl">Cost Per KM</div>
+                    <div class="stat-lbl" data-i18n="costKm">Cost Per KM</div>
                     <div class="stat-val" id="valCostPerKm" style="color: var(--amber);">--</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-lbl">Total Distance</div>
-                    <div class="stat-val" id="valDistance">0 <span style="font-size:12px; color:var(--text-muted);">km</span></div>
+                    <div class="stat-lbl" data-i18n="totalDist">Total Distance</div>
+                    <div class="stat-val" id="valDistance">0 <span style="font-size:12px; color:var(--text-muted);" data-i18n="km">km</span></div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-lbl">Total Invested</div>
+                    <div class="stat-lbl" data-i18n="totalSpent">Total Invested</div>
                     <div class="stat-val" id="valSpent">$0.00</div>
                 </div>
             </div>
         </section>
 
         <section>
-            <div class="section-title">Log Core Refill</div>
+            <div class="section-title" data-i18n="logRefill">Log Core Refill</div>
             <form id="logForm" onsubmit="saveRefillLog(event)" class="form-card">
                 <div class="input-group">
-                    <label>Current Odometer Entry (km)</label>
+                    <label data-i18n="lblOdo">Current Odometer Entry (km)</label>
                     <input type="number" id="inpOdo" required min="0" placeholder="e.g. 142000">
                 </div>
                 <div class="input-row">
                     <div class="input-group">
-                        <label>Total Cost</label>
+                        <label data-i18n="lblCost">Total Cost</label>
                         <input type="number" id="inpCost" required step="0.01" min="0" placeholder="0.00">
                     </div>
                     <div class="input-group">
-                        <label>Fuel Pumped (Liters)</label>
+                        <label data-i18n="lblLiters">Fuel Pumped (Liters)</label>
                         <input type="number" id="inpLiters" required step="0.01" min="0" placeholder="0.00">
                     </div>
                 </div>
                 <div class="input-row">
                     <div class="input-group">
-                        <label>Fuel Grade</label>
+                        <label data-i18n="lblGrade">Fuel Grade</label>
                         <select id="inpGrade" style="padding: 12px; font-size:15px;">
                             <option value="Special 95">Special 95</option>
                             <option value="Super 98">Super 98</option>
@@ -150,39 +169,42 @@
                         </select>
                     </div>
                     <div class="input-group">
-                        <label>Log Date</label>
+                        <label data-i18n="lblDate">Log Date</label>
                         <input type="date" id="inpDate" required>
                     </div>
                 </div>
                 <div class="checkbox-row">
                     <label class="checkbox-lbl">
-                        <input type="checkbox" id="inpPartial"> Partial Fill-up (Omit logic math)
+                        <input type="checkbox" id="inpPartial"> <span data-i18n="optPartial">Partial Fill-up (Omit logic math)</span>
                     </label>
                     <label class="checkbox-lbl">
-                        <input type="checkbox" id="inpMissed"> Missed preceding entry logs
+                        <input type="checkbox" id="inpMissed"> <span data-i18n="optMissed">Missed preceding entry logs</span>
                     </label>
                 </div>
-                <button type="submit" class="btn-primary">Commit Refill Log</button>
+                <button type="submit" class="btn-primary" data-i18n="btnCommit">Commit Refill Log</button>
             </form>
         </section>
 
         <section>
-            <div class="section-title">Efficiency Performance Trend</div>
+            <div class="section-title" data-i18n="chartTitle">Efficiency Performance Trend</div>
             <div class="chart-wrapper" id="chartBox">
                 <canvas id="perfChart"></canvas>
             </div>
         </section>
 
         <section>
-            <div class="section-title"><span>Activity Records</span> <span id="recordCount" style="color:var(--text-muted);">0 logs</span></div>
+            <div class="section-title">
+                <span data-i18n="activityRecords">Activity Records</span> 
+                <span id="recordCount" style="color:var(--text-muted);">0 logs</span>
+            </div>
             <div class="log-list" id="logsBox"></div>
         </section>
 
         <section>
-            <div class="section-title">System & Storage Utilities</div>
+            <div class="section-title" data-i18n="sysUtilities">System & Storage Utilities</div>
             <div class="system-tools">
-                <button class="btn-tool" onclick="exportStateData()">Export JSON Backup</button>
-                <button class="btn-tool" onclick="document.getElementById('importFilePicker').click()">Import JSON Backup</button>
+                <button class="btn-tool" onclick="exportStateData()" data-i18n="btnExport">Export JSON Backup</button>
+                <button class="btn-tool" onclick="document.getElementById('importFilePicker').click()" data-i18n="btnImport">Import JSON Backup</button>
             </div>
             <input type="file" id="importFilePicker" style="display:none" accept=".json" onchange="importStateData(event)">
         </section>
@@ -191,30 +213,63 @@
     <div class="modal" id="garageModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 style="font-size:16px; font-weight:700;">Garage Asset Manager</h3>
+                <h3 style="font-size:16px; font-weight:700;" data-i18n="garageManagerTitle">Garage Asset Manager</h3>
                 <button class="modal-close" onclick="closeGarageModal()">×</button>
             </div>
             <div class="input-group">
-                <label>Add New Vehicle Name</label>
+                <label data-i18n="lblAddVehicle">Add New Vehicle Name</label>
                 <div style="display:flex; gap:10px;">
                     <input type="text" id="newVehicleName" placeholder="e.g. Golf GTI" style="padding:10px; font-size:14px;">
-                    <button class="btn-primary" style="width:auto; padding:10px 15px;" onclick="addNewVehicleAsset()">Add</button>
+                    <button class="btn-primary" style="width:auto; padding:10px 15px;" onclick="addNewVehicleAsset()" data-i18n="btnAdd">Add</button>
                 </div>
             </div>
             <div class="input-group">
-                <label>Active Fleet</label>
+                <label data-i18n="lblActiveFleet">Active Fleet</label>
                 <div class="garage-list" id="garageListItems"></div>
             </div>
         </div>
     </div>
 
     <script>
-        let appState = { vehicles: ['Default Car'], activeVehicle: 'Default Car', records: [] };
+        let appState = { 
+            vehicles: ['Default Car'], 
+            activeVehicle: 'Default Car', 
+            records: [],
+            theme: 'dark',
+            lang: 'en'
+        };
         let activeChartInstance = null;
+
+        const i18n = {
+            en: {
+                appTitle: "Pitstop", avgEff: "Avg Efficiency", costKm: "Cost Per KM", totalDist: "Total Distance",
+                totalSpent: "Total Invested", logRefill: "Log Core Refill", lblOdo: "Current Odometer Entry (km)",
+                lblCost: "Total Cost", lblLiters: "Fuel Pumped (Liters)", lblGrade: "Fuel Grade", lblDate: "Log Date",
+                optPartial: "Partial Fill-up (Omit logic math)", optMissed: "Missed preceding entry logs",
+                btnCommit: "Commit Refill Log", chartTitle: "Efficiency Performance Trend", activityRecords: "Activity Records",
+                sysUtilities: "System & Storage Utilities", btnExport: "Export JSON Backup", btnImport: "Import JSON Backup",
+                garageManagerTitle: "Garage Asset Manager", lblAddVehicle: "Add New Vehicle Name", btnAdd: "Add",
+                lblActiveFleet: "Active Fleet", kmL: "km/L", km: "km", logCountSuffix: "logs", partialLabel: "Partial",
+                confirmDelete: "Permanently discard this log record?", confirmPurge: "Purge profile and logs for {v}? This cannot be undone."
+            },
+            ar: {
+                appTitle: "بيتستوب", avgEff: "معدل الكفاءة", costKm: "التكلفة لكل كم", totalDist: "إجمالي المسافة",
+                totalSpent: "إجمالي المصروفات", logRefill: "تسجيل تعبئة وقود", lblOdo: "قراءة العداد الحالية (كم)",
+                lblCost: "التكلفة الإجمالية", lblLiters: "الوقود (باللتر)", lblGrade: "نوع الوقود", lblDate: "التاريخ",
+                optPartial: "تعبئة جزئية (تخطي الحساب الكفاءة)", optMissed: "فوت تسجيلات سابقة",
+                btnCommit: "حفظ السجل", chartTitle: "مؤشر أداء كفاءة الوقود", activityRecords: "سجل الأنشطة",
+                sysUtilities: "أدوات النظام والتخزين", btnExport: "تصدير نسخة احتياطية", btnImport: "استيراد نسخة احتياطية",
+                garageManagerTitle: "إدارة أسطول السيارات", lblAddVehicle: "إضافة اسم سيارة جديدة", btnAdd: "إضافة",
+                lblActiveFleet: "الأسطول الحالي", kmL: "كم/لتر", km: "كم", logCountSuffix: "سجلات", partialLabel: "جزئي",
+                confirmDelete: "هل تريد حذف هذا السجل نهائياً؟", confirmPurge: "حذف ملف {v} وجميع سجلاته؟ لا يمكن التراجع عن هذا الإجراء."
+            }
+        };
 
         window.addEventListener('DOMContentLoaded', () => {
             document.getElementById('inpDate').value = new Date().toISOString().split('T')[0];
             loadAppState();
+            applyTheme();
+            applyLanguage();
             buildUI();
         });
 
@@ -226,6 +281,8 @@
                     if (parsed.vehicles && parsed.vehicles.length > 0) appState.vehicles = parsed.vehicles;
                     appState.activeVehicle = parsed.activeVehicle || appState.vehicles[0];
                     appState.records = parsed.records || [];
+                    appState.theme = parsed.theme || 'dark';
+                    appState.lang = parsed.lang || 'en';
                 } catch(e) { console.error("Corrupted state configuration.", e); }
             } else {
                 saveAppState();
@@ -234,6 +291,41 @@
 
         function saveAppState() {
             localStorage.setItem('pitstop_oled_state', JSON.stringify(appState));
+        }
+
+        function toggleTheme() {
+            appState.theme = appState.theme === 'dark' ? 'light' : 'dark';
+            saveAppState();
+            applyTheme();
+            processCalculationsAndRender();
+        }
+
+        function applyTheme() {
+            document.documentElement.setAttribute('data-theme', appState.theme);
+            document.getElementById('themeBtn').innerText = appState.theme === 'dark' ? '☀️' : '🌙';
+        }
+
+        function toggleLanguage() {
+            appState.lang = appState.lang === 'en' ? 'ar' : 'en';
+            saveAppState();
+            applyLanguage();
+            processCalculationsAndRender();
+        }
+
+        function applyLanguage() {
+            document.body.setAttribute('dir', appState.lang === 'ar' ? 'rtl' : 'ltr');
+            document.getElementById('langBtn').innerText = appState.lang === 'en' ? 'العربية' : 'English';
+            
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[appState.lang][key]) {
+                    if (el.childNodes.length > 1 && el.querySelector('span')) {
+                        el.firstChild.textContent = i18n[appState.lang][key] + " ";
+                    } else {
+                        el.innerText = i18n[appState.lang][key];
+                    }
+                }
+            });
         }
 
         function buildUI() {
@@ -281,7 +373,8 @@
         }
 
         function removeVehicleAsset(v) {
-            if (confirm(`Purge profile and logs for ${v}? This cannot be undone.`)) {
+            const msg = i18n[appState.lang].confirmPurge.replace('{v}', v);
+            if (confirm(msg)) {
                 appState.records = appState.records.filter(r => r.vehicle !== v);
                 appState.vehicles = appState.vehicles.filter(item => item !== v);
                 if (appState.activeVehicle === v) appState.activeVehicle = appState.vehicles[0];
@@ -318,7 +411,7 @@
         }
 
         function deleteRecordLog(id) {
-            if (confirm("Permanently discard this log record?")) {
+            if (confirm(i18n[appState.lang].confirmDelete)) {
                 appState.records = appState.records.filter(r => r.id !== id);
                 saveAppState();
                 processCalculationsAndRender();
@@ -346,15 +439,16 @@
             }
 
             const totalOdoDist = subset.length > 1 ? (subset[subset.length - 1].odometer - subset[0].odometer) : 0;
+            const currentLang = i18n[appState.lang];
             
-            document.getElementById('valDistance').innerHTML = `${totalOdoDist.toLocaleString()} <span style="font-size:12px; color:var(--text-muted);">km</span>`;
+            document.getElementById('valDistance').innerHTML = `${totalOdoDist.toLocaleString()} <span style="font-size:12px; color:var(--text-muted);">${currentLang.km}</span>`;
             document.getElementById('valSpent').innerText = `${totalSpent.toFixed(2)}`;
 
             if (totalDistanceCalc > 0 && totalLitersCalc > 0) {
-                document.getElementById('valEff').innerHTML = `${(totalDistanceCalc / totalLitersCalc).toFixed(2)} <span style="font-size:12px; color:var(--text-muted);">km/L</span>`;
-                document.getElementById('valCostPerKm').innerText = `${(totalSpent / totalOdoDist).toFixed(2)} /km`;
+                document.getElementById('valEff').innerHTML = `${(totalDistanceCalc / totalLitersCalc).toFixed(2)} <span style="font-size:12px; color:var(--text-muted);">${currentLang.kmL}</span>`;
+                document.getElementById('valCostPerKm').innerText = `${(totalSpent / totalOdoDist).toFixed(2)} /${currentLang.km}`;
             } else {
-                document.getElementById('valEff').innerHTML = `-- <span style="font-size:12px; color:var(--text-muted);">km/L</span>`;
+                document.getElementById('valEff').innerHTML = `-- <span style="font-size:12px; color:var(--text-muted);">${currentLang.kmL}</span>`;
                 document.getElementById('valCostPerKm').innerText = `--`;
             }
 
@@ -364,21 +458,22 @@
 
         function renderLogsContainer(subset) {
             const container = document.getElementById('logsBox');
-            document.getElementById('recordCount').innerText = `${subset.length} logs`;
+            const currentLang = i18n[appState.lang];
+            document.getElementById('recordCount').innerText = `${subset.length} ${currentLang.logCountSuffix}`;
             
             if(subset.length === 0) {
-                container.innerHTML = `<p style="text-align:center; font-size:13px; color:var(--text-muted); padding:30px 0;">No logs added yet.</p>`;
+                container.innerHTML = `<p style="text-align:center; font-size:13px; color:var(--text-muted); padding:30px 0;">--</p>`;
                 return;
             }
 
             const renderArray = [...subset].reverse();
             container.innerHTML = renderArray.map(r => {
-                const efficiencyDisplay = r.calcEff ? `${r.calcEff.toFixed(1)} km/L` : (r.isPartial ? 'Partial' : '--');
+                const efficiencyDisplay = r.calcEff ? `${r.calcEff.toFixed(1)} ${currentLang.kmL}` : (r.isPartial ? currentLang.partialLabel : '--');
                 return `
                     <div class="log-item">
                         <div class="log-meta">
                             <span class="log-date-badge">${r.date} · <span style="color:var(--text-main);">${r.grade}</span></span>
-                            <span class="log-main-specs">${r.odometer.toLocaleString()} km <span style="font-size:11px; color:var(--text-muted);">${r.calcDist ? '(+' + r.calcDist + ' km)' : ''}</span></span>
+                            <span class="log-main-specs">${r.odometer.toLocaleString()} ${currentLang.km} <span style="font-size:11px; color:var(--text-muted);">${r.calcDist ? '(+' + r.calcDist + ' ' + currentLang.km + ')' : ''}</span></span>
                         </div>
                         <div class="log-right">
                             <div>
@@ -396,11 +491,14 @@
             const chartDataPoints = subset.filter(r => r.calcEff !== undefined);
             const container = document.getElementById('chartBox');
             
-            // Wipe canvas elements strictly to prevent rendering memory allocation errors
             container.innerHTML = '<canvas id="perfChart"></canvas>';
             const ctx = document.getElementById('perfChart').getContext('2d');
 
             if(chartDataPoints.length === 0) return;
+
+            const gridColor = appState.theme === 'dark' ? '#111111' : '#e4e4e7';
+            const tickColor = appState.theme === 'dark' ? '#444444' : '#a1a1aa';
+            const lineStroke = appState.theme === 'dark' ? '#ffffff' : '#09090b';
 
             activeChartInstance = new Chart(ctx, {
                 type: 'line',
@@ -408,10 +506,10 @@
                     labels: chartDataPoints.map(r => r.date),
                     datasets: [{
                         data: chartDataPoints.map(r => r.calcEff),
-                        borderColor: '#ffffff',
+                        borderColor: lineStroke,
                         borderWidth: 1.5,
                         pointRadius: 2,
-                        pointBackgroundColor: '#ffffff',
+                        pointBackgroundColor: lineStroke,
                         tension: 0.15,
                         fill: false
                     }]
@@ -421,8 +519,8 @@
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        x: { grid: { display: false }, ticks: { color: '#444444', font: { size: 9 } } },
-                        y: { grid: { color: '#111111' }, ticks: { color: '#444444', font: { size: 9 } } }
+                        x: { grid: { display: false }, ticks: { color: tickColor, font: { size: 9 } } },
+                        y: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 9 } } }
                     }
                 }
             });
@@ -444,9 +542,10 @@
                     if (parsed.vehicles && parsed.records) {
                         appState = parsed;
                         saveAppState();
+                        applyTheme();
+                        applyLanguage();
                         buildUI();
-                        alert("Database restored successfully.");
-                    } else { alert("Invalid backup schema structure."); }
+                    } else { alert("Invalid backup structure."); }
                 } catch(err) { alert("Failed to parse resource data."); }
             };
             reader.readAsText(e.target.files[0]);
